@@ -47,29 +47,40 @@ describe('Testes da Funcionalidade Usuários', () => {
   })
 
   it('Deve editar um usuário previamente cadastrado', () => {
-    cy.request({
-      method: 'PUT',
-      url: 'usuarios' + '/OCEqlFztdTBkSqJJ',
-      body: {
-        "nome": "Edição Teste",
-        "email": "usuario.editado" + Math.floor(Math.random() * 100000000) + "@teste.com.br",
-        "password": "senha123",
-        "administrador": "true"
-      }
-    }).then((response) => {
-      expect(response.status).to.equal(200)
-      expect(response.body.message).to.equal('Registro alterado com sucesso')
+    let usuario = 'Usuário Teste Editado' + Math.floor(Math.random() * 100000000)
+    let email = 'usuario.testeeditado' + Math.floor(Math.random() * 100000000) + '@teste.com.br'
+    cy.cadastrarUsuario(usuario, email, 'senha123').then((response) => {
+      expect(response.status).to.equal(201)
+      let id = response.body._id
+      cy.request({
+        method: 'PUT',
+        url: 'usuarios' + '/' + id,
+        body: {
+          "nome": "Edição Teste",
+          "email": "usuario.editado" + Math.floor(Math.random() * 100000000) + "@teste.com.br",
+          "password": "senha123",
+          "administrador": "true"
+        }
+      }).then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.body.message).to.equal('Registro alterado com sucesso')
+      })
     })
   })
 
-  it('Deve deletar um usuário previamente cadastrado', () => {
+  it.only('Deve deletar um usuário previamente cadastrado', () => {
+    let usuario = 'Usuário Teste Editado' + Math.floor(Math.random() * 100000000)
+    let email = 'usuario.testeeditado' + Math.floor(Math.random() * 100000000) + '@teste.com.br'
+    cy.cadastrarUsuario(usuario, email, 'senha123').then((response) => {
+      expect(response.status).to.equal(201)
+      let id = response.body._id
     cy.request({
       method: 'DELETE',
-      url: 'usuarios' + '/Ok15jf9wljtELhix'
+      url: 'usuarios' + '/' + id,
     }).then((response) => {
       expect(response.status).to.equal(200)
       expect(response.body.message).to.equal('Registro excluído com sucesso')
     })
+    })
   })
-
 })

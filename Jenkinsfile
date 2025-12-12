@@ -8,7 +8,6 @@ pipeline {
     stages {
         stage('Clonar o repositorio') {
             steps {
-                // ATENÇÃO: Troque a URL abaixo pela URL do SEU repositório no GitHub
                 git branch: 'main', url: 'https://github.com/thexbie/teste-api-ebac.git'
             }
         }
@@ -19,7 +18,7 @@ pipeline {
         }
         stage('Executar Testes') {
             steps {
-                sh 'NO_COLOR=1 npm run cy:run'
+                sh 'npm start & sleep 10 && NO_COLOR=1 npm run cy:run'
             }
         }
     }
